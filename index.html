@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>"Ryaba the chicken" story generator</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>	
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style>
+		.container {
+			margin-top: 40px;
+			/*max-width: 400px;*/
+			background-color: #aad3;
+			/*border-radius: 1rem;*/
+			padding-bottom: 2ch;
+		}
+
+		form {
+			width: 100%;
+    		text-align: center;
+    		padding-top: 2ch;
+		}
+		form > p.h5 {
+			margin-bottom: 2ch;
+		}
+		form .col {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 1ch;
+		}
+		.col > input,
+		.col > textarea {
+			width: 70%;
+			border: none;
+			/*border-radius: 0.5rem;*/
+			box-sizing: border-box;
+			margin-left: 1ch;
+			padding-left: 1ch;
+			resize: none;
+		}
+		.col > label {
+			margin-bottom: 0;
+			flex-shrink: 0;
+			background-color: #e0e0e0;
+			width: 29%;
+		}
+		.btn-generate {
+			width: 70%;
+    		height: 5ch;
+		}
+		#story-template {
+			margin-top: 2ch;
+			display: block;
+		}
+		.modal-content {
+			padding: 2ch;
+		}
+		blockquote {
+			margin-top: 2ch;
+			padding-left: 3ch;
+			font-style: italic;
+		}
+		blockquote::before {
+			content: "\201E";
+		}
+		blockquote::after {
+			content: "\201D";
+		}
+		mark, .mark { padding: 0; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col">				
+				<form>
+					<h2>Great story generator</h2>
+					<p class="h5">Fill the artists to get job done:</p>
+
+					<div class="row"><div class="col"><label id="input-var1__label" for="input__var1">Your daddy: </label>
+					<input type="text" name="var1" id="input__var1" placeholder="var1">
+					</div></div><div class="row"><div class="col"><label id="input-var2__label" for="input__var2">Your mom: </label>
+					<input type="text" name="var2" id="input__var2" placeholder="var2">
+					</div></div><div class="row"><div class="col"><label id="input-var3__label" for="input__var3">Your girlfriend: </label>
+					<input type="text" name="var3" id="input__var3" placeholder="var3">
+					</div></div><div class="row"><div class="col"><label id="input-var4__label" for="input__var4">Your girlfriend's stuff: </label>
+					<input type="text" name="var4" id="input__var4" placeholder="var4">
+					</div></div><div class="row"><div class="col"><label id="input-var5__label" for="input__var5">Your friend: </label>
+					<input type="text" name="var5" id="input__var5" placeholder="var5">
+					</div></div><div class="row"><div class="col"><label id="input-var6__label" for="input__var6">Your friend's stuff: </label>
+					<input type="text" name="var6" id="input__var6" placeholder="var6">
+					</div></div><div class="row"><div class="col"><label id="input-voicing__label" for="input__voicing">Speech: </label>
+					<textarea name="" id="input__voicing" placeholder="speach"></textarea></div></div>
+					<button type="button" class="btn-generate" data-toggle="modal" data-target=".modal">Создать</button>
+				</form>
+				<result id="story-template"></result>
+				<div class="modal">
+					<div class="modal-dialog" type="button" data-dismiss="modal" data-target=".modal">
+					<!-- <div class="modal-dialog"> -->
+						<div class="modal-content" id="story-result"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		function textArrToHTML(textArr) {
+			let text = '';
+			for(ti in textArr) text += textArr[ti] + (ti != textArr.length-1 ? '<br>' : '');
+			return text;
+		}
+		$(document).ready(()=>$.getJSON('https://api.myjson.com/bins/jcmhn', data => $('#story-template').html("<strong>Подсказка:</strong><br>" + textArrToHTML(data.text))));
+		$('.btn-generate').click(function() {
+			const replacements = {
+				'{var1}': $('#input__var1').val() ? '<mark>' + $('#input__var1').val() + '</mark>' : '<mark>дед</mark>',
+				'{var2}': $('#input__var2').val() ? '<mark>' + $('#input__var2').val() + '</mark>' : '<mark>бабка</mark>',
+				'{var3}': $('#input__var3').val() ? '<mark>' + $('#input__var3').val() + '</mark>' : '<mark>курочка Ряба</mark>',
+				'{var4}': $('#input__var4').val() ? '<mark>' + $('#input__var4').val() + '</mark>' : '<mark>egg</mark>',
+				'{var5}': $('#input__var5').val() ? '<mark>' + $('#input__var5').val() + '</mark>' : '<mark>Мышара</mark>',
+				'{var6}': $('#input__var6').val() ? '<mark>' + $('#input__var6').val() + '</mark>' : '<mark>хвостоидом</mark>',
+				'{speach}': $('#input__voicing').val() ? '<blockquote><mark>' + $('#input__voicing').val() + '</mark></blockquote>' : '<blockquote><mark>Я бы сказала так: не дорог подарок как дорого внимание...и оценивать сколько бы я готова была подарок - это как бы...ээ...с учетом того, если я хочу сделать подарок, как бы я повторяюсь да, я бы сделала его таким, чтобы было человеку приятно, а если человек оценивает насколько дорог подарок...эээ...а не мое внимание, то тогда это не человек не должен понимать...эээ...подарок расценивать, то есть как внимание которое там вот дороже моего какого-то дружеского отношения.</mark></blockquote>'
+			};
+			$.getJSON('https://api.myjson.com/bins/jcmhn', data => {
+				let textArr = data.text;
+				for(ti in textArr) 
+					for (ri in replacements) 						
+						textArr[ti] = textArr[ti].replace(ri, replacements[ri]);				
+				
+				$('#story-result').html('<p>'+textArrToHTML(textArr));
+				$('#story-template').html('<p>'+textArrToHTML(textArr));
+			});
+		});
+
+	</script>
+</body>
+</html>
